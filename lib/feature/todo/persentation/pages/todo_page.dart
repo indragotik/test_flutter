@@ -1,6 +1,3 @@
-import 'dart:async';
-
-import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:test_flutter/feature/todo/persentation/bloc/todo_bloc.dart';
@@ -15,41 +12,12 @@ class TodoPage extends StatefulWidget {
 }
 
 class _TodoPageState extends State<TodoPage> {
-  StreamSubscription<List<ConnectivityResult>>? subscription;
 
   @override
   void initState() {
     super.initState();
 
-    subscription = Connectivity().onConnectivityChanged.listen((result) {
-      if (result != ConnectivityResult.none) {
-        context.read<TodoBloc>().add(GetTodosEvent());
-      } else {
-        print("no internet");
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('No internet connection'),
-          ),
-        );
-
-      }
-    });
-  }
-
-  void getData(){
-    subscription = Connectivity().onConnectivityChanged.listen((result) {
-      if (result != ConnectivityResult.none) {
-        context.read<TodoBloc>().add(GetTodosEvent());
-      } else {
-        print("no internet");
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('No internet connection'),
-          ),
-        );
-
-      }
-    });
+    context.read<TodoBloc>().add(GetTodosEvent());
   }
 
   @override
@@ -59,7 +27,7 @@ class _TodoPageState extends State<TodoPage> {
         title: const Text('Todo Page'),
         actions: [
           IconButton(
-            onPressed: () => getData(),
+            onPressed: () => context.read<TodoBloc>().add(GetTodosEvent()),
             icon: Icon(Icons.refresh),
           )
         ],
@@ -99,24 +67,6 @@ class _TodoPageState extends State<TodoPage> {
                       ),
                     ],
                   ),
-                  // child: ListTile(
-                  //   title: Text(todo.title),
-                  //   subtitle: Row(
-                  //     children: [
-                  //       Container(
-                  //         padding: EdgeInsets.all(3),
-                  //         decoration: BoxDecoration(
-                  //           color: todo.completed ? Colors.green : Colors.red,
-                  //           borderRadius: BorderRadius.circular(4),
-                  //         ),
-                  //         child: Text(
-                  //           todo.completed ? 'Completed' : 'Not Completed',
-                  //           style: const TextStyle(color: Colors.white),
-                  //         ),
-                  //       ),
-                  //     ],
-                  //   ),
-                  // ),
                 );
               },
             );
